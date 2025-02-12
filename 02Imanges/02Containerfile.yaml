@@ -1,0 +1,9 @@
+FROM fedora
+
+LABEL maintainer="Adrian Riobo Lorenzo"
+
+RUN dnf install -y cowsay
+
+ENTRYPOINT ["cowsay"]
+
+CMD ["-h"]

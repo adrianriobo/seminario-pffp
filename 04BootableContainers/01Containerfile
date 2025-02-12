@@ -1,0 +1,9 @@
+ARG BASE_IMAGE="quay.io/fedora/fedora-bootc"
+ARG BASE_VERSION="41"
+
+FROM ${BASE_IMAGE}:${BASE_VERSION}
+
+RUN useradd -m -d /var/home/admin -G wheel admin \
+    && echo "admin:password" | chpasswd
+
+RUN dnf install -y cowsay
