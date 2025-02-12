@@ -1,0 +1,12 @@
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: cowsay
+spec:
+  containers:
+  - name: cow
+    command:
+    - cowsay
+    - muuu
+    image: cowsay:latest

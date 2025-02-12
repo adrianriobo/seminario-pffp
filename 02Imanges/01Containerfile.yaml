@@ -1,0 +1,3 @@
+FROM ubi9
+
+LABEL maintainer="Adrian Riobo Lorenzo"
