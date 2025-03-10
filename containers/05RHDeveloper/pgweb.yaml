@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pgweb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pgweb
+  template:
+    metadata:
+      labels:
+        app: pgweb
+    spec:
+      containers:
+        - name: pgweb
+          image: sosedoff/pgweb
+          ports:
+            - containerPort: 8081
+          command: 
+            - "/bin/sh"
+            - "-c"
+            - "pgweb --url=postgres://zalando:$PGWEB_DB_PASSWORD@acid-minimal-cluster:5432/foo"
+          env:
+            - name: PGWEB_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: zalando.acid-minimal-cluster.credentials.postgresql.acid.zalan.do
+                  key: password
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pgweb
+spec:
+  selector:
+    app: pgweb
+  ports:
+    - name: http
+      port: 8081         # The service port
+      targetPort: 8081   # The container port where pgweb listens
+  type: ClusterIP       # Internal access only
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: pgweb
+  labels:
+    app: pgweb
+spec:
+  defaultBackend:
+    service:
+      name: pgweb
+      port:
+        number: 8081
