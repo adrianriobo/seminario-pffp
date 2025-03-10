@@ -9,6 +9,10 @@ podman container run \
 
 podman exec -ti jenkins cat /var/jenkins_home/secrets/initialAdminPassword
 
+# of executors: 1 (or more).
+Remote root directory: /home/jenkins/agent
+Launch method: Launch agent by connecting it to the controller
+
 
 podman run -d --name jenkins-agent \
   -v /var/run/docker.sock:/var/run/docker.sock \
