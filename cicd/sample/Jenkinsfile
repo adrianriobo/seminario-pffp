@@ -11,8 +11,10 @@ pipeline {
         label 'apache'
       }
       steps {
-        sh 'ant -f test.xml -v'
-        junit 'reports/result.xml'
+        dir('cicd/sample') {  // Move into the subpath
+            sh 'ant -f test.xml -v'
+            junit 'reports/result.xml'
+        }
       }
     }
     stage('build') {
@@ -20,11 +22,15 @@ pipeline {
         label 'apache'
       }
       steps {
-        sh 'ant -f build.xml -v'
+        dir('cicd/sample') {  // Move into the subpath
+            sh 'ant -f build.xml -v'
+        }
       }
       post {
         success {
-          archiveArtifacts artifacts: 'dist/*.jar', fingerprint: true
+          dir('cicd/sample') {  // Move into the subpath
+            archiveArtifacts artifacts: 'dist/*.jar', fingerprint: true
+          }        
         }
       }
     }
