@@ -1,0 +1,12 @@
+FROM jenkins/inbound-agent:jdk21
+
+USER root
+
+# Install Maven
+RUN apt-get update && \
+    apt-get install -y maven
+
+# Install Ant
+RUN apt-get install -y ant
+
+USER jenkins
