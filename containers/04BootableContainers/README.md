@@ -14,3 +14,4 @@ sudo podman run --rm -it --privileged --pull=newer --security-opt label=type:unc
           --rootfs xfs \
           --local \
           localhost/cowsay-bootc:latest
+

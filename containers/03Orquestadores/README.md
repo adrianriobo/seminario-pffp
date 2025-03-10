@@ -20,6 +20,22 @@ cowsay   0/1     ErrImagePull   0          28s
 
 oc apply -f 03Orquestadores/02pod.yaml
 
+5. Multi tier
+
+kubectl create secret generic mysql-password --from-literal=MYSQL_ROOT_PASSWORD=mypass
+
+kubectl apply -f 03Orquestadores/05tier.yaml
+
+mysql --port=30000 --host=127.0.0.1 --user=root --password=mypass
+
+create database test;
+
+use test;
+
+create table test_on_test(id varchar(20));
+
+insert into test_on_test values ('one');
+
 
 10. Operadaores
 
