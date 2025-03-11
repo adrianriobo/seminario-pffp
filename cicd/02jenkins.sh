@@ -1,4 +1,4 @@
-podman container run \
+podman run \
         --name jenkins --rm --detach \
         --privileged \
         --publish 8080:8080 \
@@ -13,11 +13,12 @@ podman exec -ti jenkins cat /var/jenkins_home/secrets/initialAdminPassword
 Remote root directory: /home/jenkins/agent
 Launch method: Launch agent by connecting it to the controller
 
+build container first
 
 podman run -d --name jenkins-agent \
-  -v /var/run/docker.sock:/var/run/docker.sock \
-  docker.io/jenkins/inbound-agent:latest \
+  localhost/agent \
   -url http://host.containers.internal:8080 \
-  76a1ea5e89c8a9df190a744afe0c6e7e29a60ec92d31ed3e740c240a4c49e463 \
+  0e85beed918f12a11a164227623511def034b7c6e634fcd41d17f19de2271804 \
   test
+  
   
