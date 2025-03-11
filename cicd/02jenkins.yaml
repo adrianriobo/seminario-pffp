@@ -1,0 +1,32 @@
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: jenkins
+spec:
+  containers:
+    - name: jenkins
+      image: docker.io/jenkins/jenkins:2.500-jdk21
+      ports:
+        - containerPort: 8080
+          hostPort: 8080
+        - containerPort: 50000
+      securityContext:
+        privileged: true
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: jenkins-agent
+spec:
+  containers:
+    - name: jenkins-agent
+      image: localhost/agent
+      args:
+        - "-url"
+        - "http://host.containers.internal:8080"
+        - "0e85beed918f12a11a164227623511def034b7c6e634fcd41d17f19de2271804"
+        - "test"
+      securityContext:
+        privileged: false
+  restartPolicy: Always
