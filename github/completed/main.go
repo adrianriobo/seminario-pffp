@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
@@ -13,10 +14,17 @@ func helloHandler(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 	sugar := logger.Sugar()
-	defer logger.Sync()
+	defer func() {
+		if err := logger.Sugar(); err != nil {
+			fmt.Println("Error when closing:", err)
+		}
+	}()
+
 	sugar.Debug("PFFP!")
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("PFFP!"))
+	if _, err := w.Write([]byte("PFFP!")); err != nil {
+		log.Fatal(err)
+	}
 }
 
 func main() {

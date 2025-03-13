@@ -2,7 +2,7 @@ VERSION ?= 0.0.1
 CONTAINER_MANAGER ?= podman
 
 # Image URL to use all building/pushing image targets
-IMG ?= quay.io/ariobolo/seminario:v${VERSION}
+IMG ?= quay.io/ariobolo/seminario-pffp:v${VERSION}
 
 # Go and compilation related variables
 GOPATH ?= $(shell go env GOPATH)
@@ -47,10 +47,13 @@ clean:
 fmt:
 	@gofmt -l -w $(SOURCE_DIRS)
 
+$(GOPATH)/bin/golangci-lint:
+	go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.60.0
+
 # Run golangci-lint against code
-.PHONY: lint 
-lint: $(TOOLS_BINDIR)/golangci-lint
-	"$(TOOLS_BINDIR)"/golangci-lint run -v --timeout 10m
+.PHONY: lint
+lint: $(GOPATH)/bin/golangci-lint
+	$(GOPATH)/bin/golangci-lint run
 
 # Build the container image
 .PHONY: oci-build
@@ -67,6 +70,25 @@ oci-build-amd64: clean
 oci-build-arm64: clean
 	# Build the container image for arm64
 	${CONTAINER_MANAGER} build --platform linux/arm64 --manifest $(IMG)-arm64 -f oci/Containerfile .
+
+# Save images for amd64 architecture only
+.PHONY: oci-save-amd64
+oci-save-amd64:
+	${CONTAINER_MANAGER} save -m -o $(PFFP_SAVE)-amd64.tar $(IMG)-amd64
+
+# Save images for arm64 architecture only
+.PHONY: oci-save-arm64
+oci-save-arm64:
+	${CONTAINER_MANAGER} save -m -o $(PFFP_SAVE)-arm64.tar $(IMG)-arm64
+
+
+PFFP_SAVE ?= pffp
+.PHONY: oci-save 
+oci-save: oci-save-amd64 oci-save-arm64
+
+oci-load:
+	${CONTAINER_MANAGER} load -i $(PFFP_SAVE)-arm64/$(PFFP_SAVE)-arm64.tar 
+	${CONTAINER_MANAGER} load -i $(PFFP_SAVE)-amd64/$(PFFP_SAVE)-amd64.tar 
 
 # Push the docker image
 .PHONY: oci-push
