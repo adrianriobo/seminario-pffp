@@ -17,7 +17,7 @@ func TestHelloHandler(t *testing.T) {
 		t.Errorf("esperado status %d, obtenido %d", http.StatusOK, resp.StatusCode)
 	}
 
-	expectedBody := "Hello, world!"
+	expectedBody := "PFFP!"
 	if w.Body.String() != expectedBody {
 		t.Errorf("esperado cuerpo %q, obtenido %q", expectedBody, w.Body.String())
 	}

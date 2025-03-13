@@ -1,0 +1,33 @@
+name: code-build
+
+on:
+  push:
+    branches: [ main ]
+    tags:
+      - '*'
+  pull_request:
+    branches: [ main ]
+
+jobs:
+
+  build:
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        working-directory: github/completed
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Go
+      # uses: actions/setup-go@v5
+      uses: actions/setup-go@f111f3307d8850f501ac008e886eec1fd1932a34
+      with:
+        go-version: '1.23'
+
+    - name: Check
+      run: |
+        make check
+
+    - name: Build
+      run: |
+        make build

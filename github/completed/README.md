@@ -2,3 +2,4 @@
 
 `go mod init seminario`
 
+### Crear 
